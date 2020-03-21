@@ -41,6 +41,11 @@ public class Person : BusinessBase<Person>
         using (BypassPropertyChecks)
         {
             Task.Delay(3000);
+
+            // Needed in case rules have changed, maybe
+            // existing data is invalid?
+            BusinessRules.CheckRules();
+
         }
     }
 }
