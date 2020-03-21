@@ -19,8 +19,8 @@ public class Person : BusinessBase<Person>
     protected override void AddBusinessRules()
     {
         base.AddBusinessRules();
-        BusinessRules.AddRule(new DelayRule(NameProperty));
-        //BusinessRules.AddRule(new DelayRuleAsync(NameProperty));
+        //BusinessRules.AddRule(new DelayRule(NameProperty));
+        BusinessRules.AddRule(new DelayRuleAsync(NameProperty));
     }
 
     public async static Task<Person> NewPersonAsync()
@@ -29,8 +29,21 @@ public class Person : BusinessBase<Person>
         return item;
     }
 
-}
+    public async static Task<Person> GetPersonAsync()
+    {
+        Person item = await DataPortal.FetchAsync<Person>();
+        return item;
+    }
 
+    [Fetch]
+    private void DataPortal_Fetch()
+    {
+        using (BypassPropertyChecks)
+        {
+            Task.Delay(3000);
+        }
+    }
+}
 public class DelayRuleAsync : BusinessRuleAsync
 {
     public DelayRuleAsync(Csla.Core.IPropertyInfo primaryProperty)
